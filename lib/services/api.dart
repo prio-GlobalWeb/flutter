@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:prio_web/services/providers/dataprovider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
-import 'providers/provider.dart';
 
 Map<String, String> headers = {
   'Content-Type': 'application/json',
@@ -11,9 +11,9 @@ Map<String, String> headers = {
   // 'Access-Control-Allow-Origin': "*",
 };
 
-Future<void> getNodeInfo(BuildContext context) async {
+Future<void> getNode(BuildContext context) async {
   try {
-    const String uri = '${Config.API_URL}/nodeget';
+    const String uri = '${Config.API_URL}/category';
     final response = await http.get(
       Uri.parse(uri),
       headers: headers,
@@ -23,11 +23,8 @@ Future<void> getNodeInfo(BuildContext context) async {
       final List<dynamic> data = json.decode(response.body);
       // int data= json.decode(response.body);
       List nodeData = List<dynamic>.from(data);
-      print(nodeData);
-
       // 상태 관리 프로바이더에 데이터 전달
-      Provider.of<StateProvider>(context, listen: false).tempData_e(nodeData);
-
+      Provider.of<DataProvider>(context, listen: false).tempData(nodeData);
     } else {
       print("불러오기 실패");
     }
@@ -36,10 +33,9 @@ Future<void> getNodeInfo(BuildContext context) async {
   }
 }
 
-
-Future<void> getData(BuildContext context) async {
+Future<void> getCount(BuildContext context) async {
   try {
-    const String uri = '${Config.API_URL}/data/PRO001/original?from=1710255600000&to=1710341999000';
+    const String uri = '${Config.API_URL}/categorycnt';
     final response = await http.get(
       Uri.parse(uri),
       headers: headers,
@@ -48,11 +44,27 @@ Future<void> getData(BuildContext context) async {
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       // int data= json.decode(response.body);
-      List nodeData = List<dynamic>.from(data);
-      print(nodeData);
-
+      List countData = List<dynamic>.from(data);
       // 상태 관리 프로바이더에 데이터 전달
-      Provider.of<StateProvider>(context, listen: false).tempData_e(nodeData);
+      // 각 카테고리별로 개수를 가져와서 설정
+      int? prioCount;
+      int? wamonsCount;
+
+      for (var entry in data) {
+        final String category = entry['category'];
+        final int count = int.parse(entry['count']);
+
+        if (category == 'PRIO') {
+          prioCount = count;
+        } else if (category == 'WAMONS') {
+          wamonsCount = count;
+        }
+      }
+
+      // 가져온 데이터를 StateProvider에 전달
+      Provider.of<DataProvider>(context, listen: false).lenSet(prioCount, wamonsCount);
+      print("${prioCount}, ${wamonsCount}");
+      print("${Provider.of<DataProvider>(context, listen: false).prioLen}, ${Provider.of<DataProvider>(context, listen: false).wamonsLen}");
 
     } else {
       print("불러오기 실패");

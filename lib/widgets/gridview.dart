@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../services/providers/dataprovider.dart';
 import '../services/providers/provider.dart';
 import 'main-txt.dart';
 
@@ -7,6 +8,8 @@ Widget prioGrid(){
   return Consumer<StateProvider>(
     builder: (context, stateProvider, _){
       final stateProvider = Provider.of<StateProvider>(context, listen: false);
+      final dataProvider = Provider.of<DataProvider>(context);
+      final prioData = dataProvider.panelData.where((data) => data['category'] == "PRIO").toList();
       return GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5,
@@ -14,7 +17,7 @@ Widget prioGrid(){
           mainAxisSpacing: 20,
           crossAxisSpacing: 50,
         ),
-        itemCount: 13,
+        itemCount: dataProvider.panelData.where((data) => data['category'] == "PRIO").length,
         itemBuilder: (BuildContext context, int idx){
           return GestureDetector(
             onTap: (){
@@ -29,7 +32,8 @@ Widget prioGrid(){
                   stateProvider.unselectedPanel2();
                 }
               }
-              stateProvider.tempData('Innotems Lab' + '${idx+1}', '${-(idx - 777777)}');
+
+              // stateProvider.tempData('Innotems Lab' + '${idx+1}', '${-(idx - 777777)}');
             },
             child: Container(
               padding: stateProvider.panelClicks[idx]
@@ -47,7 +51,7 @@ Widget prioGrid(){
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      prio_txt('${-(idx - 777777)}'),
+                      prio_txt('${prioData[idx]['id']}'),
                       Icon(Icons.light_mode, size: 35,color: (idx % 2 ==0) ?  Color(0xff4fec76): Color(0xffee8b60)),
                     ],
                   ),
@@ -67,6 +71,8 @@ Widget wamonsGrid(){
   return Consumer<StateProvider>(
     builder: (context, stateProvider, _){
       final stateProvider = Provider.of<StateProvider>(context, listen: false);
+      final dataProvider = Provider.of<DataProvider>(context);
+      final wamonsData = dataProvider.panelData.where((data) => data['category'] == "WAMONS").toList();
       return GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5,
@@ -74,7 +80,7 @@ Widget wamonsGrid(){
           mainAxisSpacing: 20,
           crossAxisSpacing: 50,
         ),
-        itemCount: 3,
+        itemCount: dataProvider.panelData.where((data) => data['category'] == "WAMONS").length,
         itemBuilder: (BuildContext context, int idx){
           return GestureDetector(
             onTap: (){
@@ -102,7 +108,7 @@ Widget wamonsGrid(){
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      wamons_txt('${-(idx - 999999)}'),
+                      wamons_txt('${wamonsData[idx]['id']}'),
                       Icon(Icons.light_mode, size: 35, color: (idx % 2 ==0) ?  Color(0xff4fec76): Color(0xffee8b60),),
                     ],
                   ),

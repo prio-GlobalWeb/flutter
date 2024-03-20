@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'package:prio_web/services/providers/dataprovider.dart';
 
 class StateProvider extends ChangeNotifier{
   DateTime? _current = DateTime.now();
@@ -44,7 +45,7 @@ class StateProvider extends ChangeNotifier{
 
   List<bool> _panelClicks = List.generate(13, (index) => false);
   List<bool> get panelClicks => _panelClicks;
-  List<bool> _panelClicks2 = List.generate(3, (index) => false);
+  List<bool> _panelClicks2 = List.generate(11, (index) => false);
   List<bool> get panelClicks2 => _panelClicks2;
   int _selectedPanel = -1;
   int get selectedPanel => _selectedPanel;
@@ -79,28 +80,11 @@ class StateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  String? _location;
-  String? get location => _location;
-  String? _node;
-  String? get node => _node;
-
-  void tempData(String location, String node){
-    _location = location;
-    _node = node;
-    notifyListeners();
-  }
 
   bool _isClick = false;
   bool get isClick => _isClick;
   void checkClick(){
     _isClick = !_isClick;
-    notifyListeners();
-  }
-
-  List _tempData3 = [];
-  List get tempData3 => _tempData3;
-  void tempData_e(data){
-    _tempData3 = data;
     notifyListeners();
   }
 }

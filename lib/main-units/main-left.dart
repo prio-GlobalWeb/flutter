@@ -5,6 +5,8 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:prio_web/widgets/piechart.dart';
 import 'package:provider/provider.dart';
 
+import '../services/providers/dataprovider.dart';
+
 class MainLeft extends StatefulWidget {
   const MainLeft({super.key});
 
@@ -21,14 +23,15 @@ class _MainLeftState extends State<MainLeft> {
   @override
   Widget build(BuildContext context) {
     final stateProvider = Provider.of<StateProvider>(context);
+    final dataProvider = Provider.of<DataProvider>(context, listen: false);
     return Expanded(
       flex: 2,
       child: Column(
-        mainAxisAlignment: Provider.of<StateProvider>(context, listen: false).node == null
-            ?MainAxisAlignment.center : MainAxisAlignment.spaceAround,
+        mainAxisAlignment: dataProvider.node == null
+            ? MainAxisAlignment.center : MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Provider.of<StateProvider>(context, listen: false).node == null
+          dataProvider.node == null
               ?Container(width: 0,height: 0,) : Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
@@ -43,8 +46,8 @@ class _MainLeftState extends State<MainLeft> {
                   child:  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ins_name('${stateProvider.location}'),
-                      nodeid('${stateProvider.node}'),
+                      // ins_name('${stateProvider.location}'),
+                      // nodeid('${stateProvider.node}'),
                     ],
                   ),
                 ),

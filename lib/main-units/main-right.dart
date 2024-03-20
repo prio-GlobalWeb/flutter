@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prio_web/services/providers/dataprovider.dart';
 import 'package:prio_web/services/providers/provider.dart';
 import 'package:prio_web/widgets/buttons.dart';
 import 'package:prio_web/widgets/gridview.dart';
@@ -18,6 +19,9 @@ class _MainRightState extends State<MainRight> {
 
   @override
   Widget build(BuildContext context) {
+    final dataProvider = Provider.of<DataProvider>(context, listen: false);
+    final  len = dataProvider.panelData.where((data) => data['category'] == "PRIO").length;
+    final  len2 = dataProvider.panelData.where((data) => data['category'] == "WAMONS").length;
     return Expanded(
       flex: 8,
       child: Container(
@@ -76,13 +80,13 @@ class _MainRightState extends State<MainRight> {
                 const SizedBox(height: 15,),
                 Row(
                   children: [
-                    device_count_txt('PRIO 13 Devices'),
+                    device_count_txt('PRIO ${len} Devices'),
                     const SizedBox(width: 10,),
                     Expanded(child: Container(height: 1, color: const Color(0xffaab1b7),),),
                   ],
                 ),
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: Container(
                     margin: const EdgeInsets.symmetric(vertical: 15),
                     child:prioGrid(),
@@ -91,7 +95,7 @@ class _MainRightState extends State<MainRight> {
                 const SizedBox(height: 15,),
                 Row(
                   children: [
-                    device_count_txt('WAMONS 3 Devices'),
+                    device_count_txt('WAMONS ${len2} Devices'),
                     const SizedBox(width: 10,),
                     Expanded(child: Container(height: 1, color: const Color(0xffaab1b7),),),
                   ],

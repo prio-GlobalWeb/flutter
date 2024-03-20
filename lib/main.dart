@@ -20,8 +20,8 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (c) => StateProvider()),
-        ChangeNotifierProvider(create: (c) => DataProvider()),
+        ChangeNotifierProvider(create: (_) => StateProvider()),
+        ChangeNotifierProvider(create: (_) => DataProvider()),
       ],
     child: const MyApp(),
   ));
