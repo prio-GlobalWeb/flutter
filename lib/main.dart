@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:prio_web/services/provider.dart';
+import 'package:prio_web/services/providers/dataprovider.dart';
+import 'package:prio_web/services/providers/provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'home.dart';
@@ -16,8 +17,12 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
   setPathUrlStrategy();
-  runApp(ChangeNotifierProvider(
-    create: (_) => StateProvider(),
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (c) => StateProvider()),
+        ChangeNotifierProvider(create: (c) => DataProvider()),
+      ],
     child: const MyApp(),
   ));
   // runApp(const MyApp());

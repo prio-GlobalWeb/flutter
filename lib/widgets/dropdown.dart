@@ -1,6 +1,6 @@
 import "package:dropdown_button2/dropdown_button2.dart";
 import "package:flutter/material.dart";
-import "package:prio_web/services/provider.dart";
+import 'package:prio_web/services/providers/provider.dart';
 import "package:prio_web/widgets/main-txt.dart";
 import "package:provider/provider.dart";
 

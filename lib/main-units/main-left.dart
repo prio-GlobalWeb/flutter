@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prio_web/services/provider.dart';
+import 'package:prio_web/services/providers/provider.dart';
 import 'package:prio_web/widgets/main-txt.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:prio_web/widgets/piechart.dart';

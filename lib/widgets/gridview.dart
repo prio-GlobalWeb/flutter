@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/provider.dart';
+import '../services/providers/provider.dart';
 import 'main-txt.dart';
 
 Widget prioGrid(){

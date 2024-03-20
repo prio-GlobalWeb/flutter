@@ -5,7 +5,7 @@ import 'package:prio_web/main-units/main-left.dart';
 import 'package:prio_web/main-units/main-right.dart';
 import 'package:prio_web/main-units/main-top.dart';
 import 'package:prio_web/services/api.dart';
-import 'package:prio_web/services/provider.dart';
+import 'package:prio_web/services/providers/provider.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {

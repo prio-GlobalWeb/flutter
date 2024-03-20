@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
-import 'provider.dart';
+import 'providers/provider.dart';
 
 Map<String, String> headers = {
   'Content-Type': 'application/json',
