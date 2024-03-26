@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,20 +13,37 @@ import 'home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await EasyLocalization.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
   setPathUrlStrategy();
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => StateProvider()),
-        ChangeNotifierProvider(create: (_) => DataProvider()),
-      ],
-    child: const MyApp(),
-  ));
-  // runApp(const MyApp());
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => StateProvider()),
+          ChangeNotifierProvider(create: (_) => DataProvider()),
+        ],
+        child: const MyApp(),
+      ),
+  );
+  // runApp(
+  //   EasyLocalization(
+  //     saveLocale: true,
+  //     useOnlyLangCode: true,
+  //     supportedLocales: [Locale('en'), Locale('ko')],
+  //     path: 'assets/translations',
+  //     fallbackLocale: Locale('en'),
+  //     child: MultiProvider(
+  //       providers: [
+  //         ChangeNotifierProvider(create: (_) => StateProvider()),
+  //         ChangeNotifierProvider(create: (_) => DataProvider()),
+  //       ],
+  //       child: const MyApp(),
+  //     ),
+  //   ),
+  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -44,10 +62,9 @@ class MyApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('ko', 'KR'),
-          Locale("en",'US'),
-        ],
+        // localizationsDelegates: context.localizationDelegates,
+        // supportedLocales: context.supportedLocales,
+        // locale: context.locale,
         debugShowCheckedModeBanner: false,
         title: "PRIO WEB",
         builder: (context, widget) {

@@ -22,6 +22,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     super.initState();
     getNode(context);
     getCount(context);
+    getData(context);
+    getSensor(context);
   }
 
   @override

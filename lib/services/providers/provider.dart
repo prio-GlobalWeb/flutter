@@ -51,6 +51,13 @@ class StateProvider extends ChangeNotifier{
   int get selectedPanel => _selectedPanel;
   int _selectedPanel2 = -1;
   int get selectedPanel2 => _selectedPanel2;
+  int _count = 0;
+  int get count => _count;
+
+  void resetPanel(idx){
+    _count = 0;
+    notifyListeners();
+  }
 
   void selectedPanel_f(){
     _panelClicks[_selectedPanel] = false;
@@ -61,8 +68,17 @@ class StateProvider extends ChangeNotifier{
     notifyListeners();
   }
   void updatedPanel(int idx){
+    if (_selectedPanel == idx) {
+      _count++; // 패널을 누를 때마다 count 증가
+      print(count);
+    } else {
+      _count = 1; // 새로운 패널을 눌렀을 때는 count 초기화
+      print(count);
+    }
     _selectedPanel = idx;
     _panelClicks[idx] = !panelClicks[idx];
+    print(selectedPanel);
+    print(panelClicks);
     notifyListeners();
   }
 
@@ -75,11 +91,17 @@ class StateProvider extends ChangeNotifier{
     notifyListeners();
   }
   void updatedPanel2(int idx){
+    if (_selectedPanel2 == idx) {
+      _count++; // 패널을 누를 때마다 count 증가
+    } else {
+      _count = 1; // 새로운 패널을 눌렀을 때는 count 초기화
+    }
     _selectedPanel2 = idx;
     _panelClicks2[idx] = !panelClicks2[idx];
+    print(selectedPanel2);
+    print('{panelClicks2}');
     notifyListeners();
   }
-
 
   bool _isClick = false;
   bool get isClick => _isClick;
@@ -87,4 +109,23 @@ class StateProvider extends ChangeNotifier{
     _isClick = !_isClick;
     notifyListeners();
   }
+
+  bool _prioClick = false;
+  bool get prioClick => _prioClick;
+  bool _wamonsClick = false;
+  bool get wamonsClick => _wamonsClick;
+  void click(int idx) {
+    if (idx == 1) {
+      _prioClick = true;
+      _wamonsClick = false;
+    } else if (idx == 2) {
+      _prioClick = false;
+      _wamonsClick = true;
+    } else if (idx == 3) {
+      _prioClick = false;
+      _wamonsClick = false;
+    }
+    notifyListeners();
+  }
+
 }

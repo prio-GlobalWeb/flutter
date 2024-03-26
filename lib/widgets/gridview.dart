@@ -21,19 +21,24 @@ Widget prioGrid(){
         itemBuilder: (BuildContext context, int idx){
           return GestureDetector(
             onTap: (){
-               if(stateProvider.isClick){
-                // isClick 활성화 시 그래프로 확인할 패널 중복 선택 가능하도록
-              }else{
-                if(stateProvider.selectedPanel != -1){
-                  stateProvider.selectedPanel_f();
-                }
-                stateProvider.updatedPanel(idx);
-                if(stateProvider.selectedPanel2 != -1){
-                  stateProvider.unselectedPanel2();
-                }
+              if (stateProvider.selectedPanel != -1) {
+                stateProvider.selectedPanel_f();
               }
-
-              // stateProvider.tempData('Innotems Lab' + '${idx+1}', '${-(idx - 777777)}');
+              stateProvider.updatedPanel(idx);
+              if (stateProvider.selectedPanel2 != -1 && stateProvider.count != 2) {
+                stateProvider.unselectedPanel2();
+              }
+              if (stateProvider.count == 2) {
+                stateProvider.click(3);
+                stateProvider.resetPanel(idx);// count가 2일 때는 count 초기화
+                stateProvider.selectedPanel_f();
+                dataProvider.resetData();
+              }
+              if(stateProvider.count==1){
+                stateProvider.click(1);
+              }
+              dataProvider.setData(prioData[idx]['setup_location'], prioData[idx]['id']);
+              dataProvider.returnData_node(dataProvider.node, context);
             },
             child: Container(
               padding: stateProvider.panelClicks[idx]
@@ -56,7 +61,7 @@ Widget prioGrid(){
                     ],
                   ),
                   const SizedBox(height: 12,),
-                  prio_ins_txt('Innotems Lab' + '${idx+1}'),
+                  prio_ins_txt('${prioData[idx]['setup_location']}'),
                 ],
               ),
             ),
@@ -84,14 +89,24 @@ Widget wamonsGrid(){
         itemBuilder: (BuildContext context, int idx){
           return GestureDetector(
             onTap: (){
-              debugPrint("패널 클릭");
-              if(stateProvider.selectedPanel2 != -1){
+              if (stateProvider.selectedPanel2 != -1) {
                 stateProvider.selectedPanel2_f();
               }
               stateProvider.updatedPanel2(idx);
-              if(stateProvider.selectedPanel != -1){
+              if (stateProvider.selectedPanel != -1 && stateProvider.count != 2) {
                 stateProvider.unselectedPanel();
               }
+              if (stateProvider.count == 2) {
+                stateProvider.resetPanel(idx); // count가 2일 때는 count 초기화
+                stateProvider.click(3);
+                stateProvider.selectedPanel2_f();
+                dataProvider.resetData();
+              }
+              if(stateProvider.count==1){
+                stateProvider.click(2);
+              }
+              dataProvider.setData(wamonsData[idx]['setup_location'], wamonsData[idx]['id']);
+              dataProvider.returnData_node(dataProvider.node, context);
             },
             child: Container(
               padding: stateProvider.panelClicks2[idx]
@@ -113,7 +128,7 @@ Widget wamonsGrid(){
                     ],
                   ),
                   const SizedBox(height: 12,),
-                  wamons_ins_txt('Innotems Lab'+ '${idx+1}'),
+                  wamons_ins_txt('${wamonsData[idx]['setup_location']}'),
                 ],
               ),
             ),

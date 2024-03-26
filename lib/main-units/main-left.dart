@@ -4,7 +4,6 @@ import 'package:prio_web/widgets/main-txt.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:prio_web/widgets/piechart.dart';
 import 'package:provider/provider.dart';
-
 import '../services/providers/dataprovider.dart';
 
 class MainLeft extends StatefulWidget {
@@ -15,24 +14,51 @@ class MainLeft extends StatefulWidget {
 }
 
 class _MainLeftState extends State<MainLeft> {
-  List types = [
-    'Temperature (°C)', 'Humidity (%)', 'TVOC (ppb)',
-    'CO(ppm)', 'CO2 (ppm)', 'PM10 (㎍/m³)', 'PM2.5 (㎍/m³)'
-  ];
-
   @override
   Widget build(BuildContext context) {
     final stateProvider = Provider.of<StateProvider>(context);
-    final dataProvider = Provider.of<DataProvider>(context, listen: false);
+    final dataProvider = Provider.of<DataProvider>(context);
     return Expanded(
       flex: 2,
       child: Column(
-        mainAxisAlignment: dataProvider.node == null
-            ? MainAxisAlignment.center : MainAxisAlignment.spaceAround,
+        mainAxisAlignment:  MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          dataProvider.node == null
-              ?Container(width: 0,height: 0,) : Container(
+          (dataProvider.node == null ||(stateProvider.prioClick==false && stateProvider.wamonsClick==false)) ?
+          Container(
+            width: double.infinity,
+            height: 300,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              border: Border.all(color: const Color(0xff3994ef)),
+            ),
+            child: Align(
+              alignment: Alignment.center,
+              child: data_txt('Select Device Panel'),
+            ),
+          ) : dataProvider.nodeData ==null ?
+          Container(
+            width: double.infinity,
+            height: 300,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              border: Border.all(color: const Color(0xff3994ef)),
+            ),
+            child: Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  data_txt('No Data\n'),
+                  data_txt2('Check the connection status of the product'),
+                  data_txt2('Check the network status'),
+                ],
+              )
+            ),
+          ) :
+          Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -46,8 +72,8 @@ class _MainLeftState extends State<MainLeft> {
                   child:  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // ins_name('${stateProvider.location}'),
-                      // nodeid('${stateProvider.node}'),
+                      ins_name('${dataProvider.location}'),
+                      nodeid('${dataProvider.node}'),
                     ],
                   ),
                 ),
@@ -68,23 +94,30 @@ class _MainLeftState extends State<MainLeft> {
                 ),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: 7,
+                  itemCount: dataProvider.returnCnt(dataProvider.node!),
                   itemBuilder: (BuildContext context, int idx){
                     return Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.circle, size: 24,),
-                              SizedBox(width: 10,),
-                              type_txt(types, idx,)
-                            ],
-                          ),
-                          Text('${idx + 999}'),
-                        ],
-                      ),
+                        padding: EdgeInsets.symmetric(vertical: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.circle, size: 24,),
+                                    SizedBox(width: 10,),
+                                    type_txt(dataProvider.returnName(dataProvider.node), idx,),
+                                  ],
+                                ),
+                                Text('${dataProvider.fileData[idx]['file_data']}'),
+                              ],
+                            ),
+                            dataProvider.returnTarget(dataProvider.node).isNotEmpty ?
+                            target_txt(dataProvider.returnTarget(dataProvider.node), idx,) : Container(),
+                          ],
+                        )
                     );
                   },
                 ),
@@ -109,7 +142,7 @@ class _MainLeftState extends State<MainLeft> {
                   thickness: 1,
                   color: Color(0xffaab1b7),
                 ),
-                Container(
+                stateProvider.wamonsClick ?Container(width: 0,height: 0,) : Container(
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,11 +167,11 @@ class _MainLeftState extends State<MainLeft> {
                     ],
                   ),
                 ),
-                Divider(
+                dataProvider.node != null ? Container(width: 0,height: 0,) : Divider(
                   thickness: 1,
                   color: Color(0xffaab1b7),
                 ),
-                Container(
+                stateProvider.prioClick ?Container(width: 0,height: 0,) : Container(
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

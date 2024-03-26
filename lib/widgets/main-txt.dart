@@ -34,7 +34,7 @@ Text ins_name(String txt){
 
 Text nodeid(String txt){
   return Text(
-    'PRIO ' + txt,
+    txt,
     style: TextStyle(
       fontFamily: 'shsR',
       fontSize: 15,
@@ -55,6 +55,17 @@ Text prio_status(String txt){
 Text type_txt(List types, int idx){
   return Text(
     types[idx],
+    style: TextStyle(
+      fontFamily: 'shsR',
+      fontSize: 16,
+      color: Color(0xff868a90),
+    ),
+  );
+}
+
+Text target_txt(List types, int idx){
+  return Text(
+    '          - ${types[idx]}',
     style: TextStyle(
       fontFamily: 'shsR',
       fontSize: 16,
@@ -148,5 +159,30 @@ TextStyle textStyle(){
   return TextStyle(
     fontFamily: 'shsM',
     fontSize: 15,
+  );
+}
+
+Text data_txt(
+    String txt,
+    ){
+  return Text(
+    txt,
+    style: TextStyle(
+      fontFamily: 'shsB',
+      fontSize: 22,
+    ),
+  );
+}
+
+Text data_txt2(
+    String txt,
+    ){
+  return Text(
+    txt,
+    textAlign: TextAlign.center,
+    style: TextStyle(
+      fontFamily: 'shsM',
+      fontSize: 20,
+    ),
   );
 }
