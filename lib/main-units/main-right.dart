@@ -4,7 +4,7 @@ import 'package:prio_web/services/providers/dataprovider.dart';
 import 'package:prio_web/services/providers/provider.dart';
 import 'package:prio_web/widgets/buttons.dart';
 import 'package:prio_web/widgets/gridview.dart';
-import 'package:prio_web/widgets/main-txt.dart';
+import 'package:prio_web/widgets/txt/main-txt.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/dropdown.dart';
@@ -40,7 +40,7 @@ class _MainRightState extends State<MainRight> {
                     children: [
                       Container(width:170,margin: EdgeInsets.only(left: 15), child: locationDrop(context,),),
                       Container(width:170,margin: EdgeInsets.only(left: 15), child: statusDrop(context,),),
-                      Container(width:85, height: double.infinity, margin: EdgeInsets.only(left: 15), child: mapBtn(),),
+                      Container(width:85, height: double.infinity, margin: EdgeInsets.only(left: 15), child: mapBtn(context),),
                       Container(width:85, height: double.infinity, margin: EdgeInsets.only(left: 15), child: csvBtn(),),
                       Container(width:97, height: double.infinity, margin: EdgeInsets.only(left: 15), child: recordBtn(),),
                       GestureDetector(

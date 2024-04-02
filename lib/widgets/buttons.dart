@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:prio_web/map.dart';
 import 'package:prio_web/services/providers/provider.dart';
 import 'package:provider/provider.dart';
 
-ElevatedButton mapBtn(){
+ElevatedButton mapBtn(BuildContext context){
   return ElevatedButton(
-    onPressed: (){debugPrint("Go to Map page");},
+    onPressed: (){
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+            return MapPage(); // 이동할 페이지 위젯
+          },
+          transitionDuration: Duration(milliseconds: 0), // 전환 시간 설정 (0으로 설정하여 효과를 없앰)
+        ),
+      );
+    },
     child: Text(
       'MAP',
       style: TextStyle(

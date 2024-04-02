@@ -5,19 +5,21 @@ import 'package:prio_web/widgets/avgstatus.dart';
 class DataProvider extends ChangeNotifier {
   // prio 및 wamons 몇 개인지 확인
   List _panelData = [];
-
   List get panelData => _panelData;
+  List _nodes = [];
+  List get nodes => _nodes;
 
   void tempData(data) {
     _panelData = data;
+    // 조회된 데이터에서 노드 값만 별도의 리스트로 저장
+    // 초기 화면의 상태 색상을 구하기 위함
+    _nodes = data.map((item) => item['id']).toList();
     notifyListeners();
   }
 
   int? _prioLen;
-
   int? get prioLen => _prioLen;
   int? _wamonsLen;
-
   int? get wamonsLen => _wamonsLen;
 
   void lenSet(prio, wamons) {
@@ -28,10 +30,8 @@ class DataProvider extends ChangeNotifier {
 
   // 선택한 패널의 nodeid와 설치 장소 저장
   String? _location;
-
   String? get location => _location;
   String? _node;
-
   String? get node => _node;
 
   void setData(location, node) {
@@ -43,16 +43,6 @@ class DataProvider extends ChangeNotifier {
   void resetData() {
     _location = null;
     _node = null;
-    notifyListeners();
-  }
-
-  // 각 장치에 대한 측정 값 저장
-  List _datas = [];
-
-  List get datas => _datas;
-
-  void tempDatas(data) {
-    _datas = data;
     notifyListeners();
   }
 
@@ -81,10 +71,14 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<Map<String, String>> _sensorData = [];
+  List<Map<String, String>> get sensorData => _sensorData;
+
   List<String> returnName(id) {
-    List<Map<String, String>> sensorData = sensorNames[id] ?? [];
+    _sensorData = sensorNames[id] ?? [];
+    print(_sensorData); // 이름, 슬롯넘버
     List<String> names = [];
-    for (var data in sensorData) {
+    for (var data in _sensorData) {
       if (data.containsKey('name')) {
         names.add(data['name']!);
       }
@@ -171,28 +165,50 @@ class DataProvider extends ChangeNotifier {
   Map<String, List<double>> _fileDataMap = {};
   Map<String, List<double>> get fileDataMap => _fileDataMap;
 
-  void tempData_node(data) {
+  // api 호출 후 해당 함수를 통해 데이터를 저장할 때
+  // 점수 계산 및 색상 상태 반환
+  void tempData_node(data, BuildContext context) {
     _tempNodeData = data;
+    initColor(context, _nodes);
     notifyListeners();
   }
 
-  void setDataMap(BuildContext context){
+  // 초기 웹 페이지 실행 시 각 노드별 점수에 따른 색상을 구하기 위함
+  void initColor(BuildContext context, List nodes) {
+    nodes.forEach((node) {
+      _nodeData = _tempNodeData.firstWhere((item) => item['node'] == node,
+          orElse: () => null);
+      if (_nodeData != null) {
+        // print(_nodeData);
+        setDataMap(context, node);
+      } else {
+        print('Node data not found for node: $node');
+      }
+    });
+  }
+
+  // sensor의 slot_number와 동일한 file_name의 file_data만 맵으로 묶기
+  void setDataMap(BuildContext context, String node){
     _fileDataMap = {};
     var datas = _nodeData['datas'];
-    for(var data in datas){
+    var slotNumbers = sensorNames[node]!.map((item) => item['slot_number']).toList();
+    for (var data in datas) {
       var files = data['files'];
-      for(var file in files){
+      for (var file in files) {
         var filename = file['file_name'].toString();
         var filedata = file['file_data'];
 
-        if(!fileDataMap.containsKey(filename)){
-          fileDataMap[filename] = [filedata.toDouble()];
-        }else{
-          fileDataMap[filename]!.add(filedata.toDouble());
+        // 주어진 노드의 sensorNames에 있는 slot_number에 대해서만 처리
+        if (slotNumbers.contains(filename)) {
+          if (!_fileDataMap.containsKey(filename)) {
+            _fileDataMap[filename] = [filedata.toDouble()];
+          } else {
+            _fileDataMap[filename]!.add(filedata.toDouble());
+          }
         }
       }
     }
-    calCOorTVOC(fileDataMap, context);
+    calScore(_fileDataMap, context, node);
   }
 
   // 주어진 노드에 대한 마지막 데이터 출력
@@ -200,7 +216,7 @@ class DataProvider extends ChangeNotifier {
     _fileData = [];
     _nodeData = _tempNodeData.firstWhere((item) => item['node'] == node,
         orElse: () => null);
-    setDataMap(context);
+    setDataMap(context, _node!);
     // print(_nodeData);
     // tempScore(context);
     // 노드의 데이터가 존재한다면
@@ -228,6 +244,29 @@ class DataProvider extends ChangeNotifier {
         _fileData.add({'file_name': 0});
       }
     }
+    print(fileData);
   }
 
+  Map<String, int> _scores = {};
+  Map<String, int> get scores => _scores;
+  int _sum = 0;
+  int get sum => _sum;
+  // 초기 웹 페이지 전체적인 노드별 점수 저장용
+  Map<String, int> _nodeSums = {};
+  Map<String , int> get nodeSums => _nodeSums;
+
+  // 실행 할 때마다 저장되있던 점수 제거
+  // 초기화 안하면 점수 계속 더해짐
+  void resetSum(){
+    _sum = 0;
+    notifyListeners();
+  }
+
+  // 각각의 점수 저장 및 총점 저장
+  void saveScores(String key, int score, String node){
+    _scores[key] = score;
+    _sum += score;
+    _nodeSums[node] = _sum;
+    notifyListeners();
+  }
 }

@@ -107,12 +107,12 @@ Future<void> getData(BuildContext context) async {
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       List dataList = List<dynamic>.from(data);
-      Provider.of<DataProvider>(context, listen: false).tempData_node(dataList);
+      Provider.of<DataProvider>(context, listen: false).tempData_node(dataList, context);
     } else {
       print("불러오기 실패");
     }
   } catch (e) {
-    print("에러: $e");
+    print("에러22: $e");
   }
 }
 

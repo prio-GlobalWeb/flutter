@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:prio_web/services/providers/provider.dart';
-import 'package:prio_web/widgets/main-txt.dart';
+import 'package:prio_web/widgets/txt/main-txt.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:prio_web/widgets/piechart.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +14,7 @@ class MainLeft extends StatefulWidget {
 }
 
 class _MainLeftState extends State<MainLeft> {
+
   @override
   Widget build(BuildContext context) {
     final stateProvider = Provider.of<StateProvider>(context);
@@ -81,16 +82,24 @@ class _MainLeftState extends State<MainLeft> {
                   thickness: 1,
                   color: Color(0xffaab1b7),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 10),
-                  alignment: Alignment.center,
-                  width: 74,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Color(0xff4fec76),
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  child: prio_status('Good'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        alignment: Alignment.center,
+                        width: 75,
+                        // width: 300,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: stateProvider.statusColor(dataProvider.sum),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: prio_status('${dataProvider.sum}'),
+                        // child: prio_status('${stateProvider.getNodeColorMap(dataProvider.nodeSums, 'PRIO',context)}'),
+                    ),
+                    Text('${stateProvider.colorText[stateProvider.statusColor(dataProvider.sum)]}', style: status_textStyle(),),
+                  ],
                 ),
                 ListView.builder(
                   shrinkWrap: true,
@@ -156,13 +165,13 @@ class _MainLeftState extends State<MainLeft> {
                               child: pietitle_txt('PRIO'),
                             ),
                             SizedBox(height: 5,),
-                            prioCount(),
+                            prioCount(context),
                           ],
                         ),
                       ),
                       Container(
                         height: 100,
-                        child: prioPie(),
+                        child: prioPie(context),
                       ),
                     ],
                   ),
@@ -185,13 +194,13 @@ class _MainLeftState extends State<MainLeft> {
                               child: pietitle_txt('WAMONS'),
                             ),
                             SizedBox(height: 5,),
-                            wamonsCount(),
+                            wamonsCount(context),
                           ],
                         ),
                       ),
                       Container(
                         height: 100,
-                        child: wamonsPie(),
+                        child: wamonsPie(context),
                       ),
                     ],
                   ),

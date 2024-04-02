@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prio_web/widgets/main-txt.dart';
+import 'package:prio_web/widgets/txt/main-txt.dart';
 
 class MainTop extends StatefulWidget {
   const MainTop({super.key});

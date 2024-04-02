@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:prio_web/map.dart';
 import 'package:prio_web/services/providers/dataprovider.dart';
+import 'package:prio_web/services/providers/mapprovider.dart';
 import 'package:prio_web/services/providers/provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -24,6 +26,7 @@ Future<void> main() async {
         providers: [
           ChangeNotifierProvider(create: (_) => StateProvider()),
           ChangeNotifierProvider(create: (_) => DataProvider()),
+          ChangeNotifierProvider(create: (_) => MapProvider()),
         ],
         child: const MyApp(),
       ),
@@ -74,7 +77,8 @@ class MyApp extends StatelessWidget {
             child: widget!,
           );
         },
-        home: Home(),
+        home: MapPage(),
+        // home: Home(),
       ),
     );
   }

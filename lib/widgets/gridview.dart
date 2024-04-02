@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/providers/dataprovider.dart';
 import '../services/providers/provider.dart';
-import 'main-txt.dart';
+import 'txt/main-txt.dart';
 
 Widget prioGrid(){
   return Consumer<StateProvider>(
@@ -29,8 +29,8 @@ Widget prioGrid(){
                 stateProvider.unselectedPanel2();
               }
               if (stateProvider.count == 2) {
-                stateProvider.click(3);
                 stateProvider.resetPanel(idx);// count가 2일 때는 count 초기화
+                stateProvider.click(3);
                 stateProvider.selectedPanel_f();
                 dataProvider.resetData();
               }
@@ -57,7 +57,8 @@ Widget prioGrid(){
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       prio_txt('${prioData[idx]['id']}'),
-                      Icon(Icons.light_mode, size: 35,color: (idx % 2 ==0) ?  Color(0xff4fec76): Color(0xffee8b60)),
+                      dataProvider.nodeSums[prioData[idx]['id']] == null ?  Icon(Icons.light_mode, size: 35,color: Colors.grey):
+                      Icon(Icons.light_mode, size: 35,color: stateProvider.statusColor(dataProvider.nodeSums[prioData[idx]['id']]!)),
                     ],
                   ),
                   const SizedBox(height: 12,),
@@ -124,7 +125,9 @@ Widget wamonsGrid(){
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       wamons_txt('${wamonsData[idx]['id']}'),
-                      Icon(Icons.light_mode, size: 35, color: (idx % 2 ==0) ?  Color(0xff4fec76): Color(0xffee8b60),),
+                      dataProvider.nodeSums[wamonsData[idx]['id']] == null
+                          ?  Icon(Icons.light_mode, size: 35,color: Colors.grey):
+                      Icon(Icons.light_mode, size: 35,color: stateProvider.statusColor(dataProvider.nodeSums[wamonsData[idx]['id']]!)),
                     ],
                   ),
                   const SizedBox(height: 12,),

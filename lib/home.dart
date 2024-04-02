@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:prio_web/main-units/main-left.dart';
 import 'package:prio_web/main-units/main-right.dart';
 import 'package:prio_web/main-units/main-top.dart';
+import 'package:prio_web/model/data.dart';
 import 'package:prio_web/services/api.dart';
+import 'package:prio_web/services/providers/dataprovider.dart';
 import 'package:prio_web/services/providers/provider.dart';
+import 'package:prio_web/widgets/txt/main-txt.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
@@ -16,14 +19,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
+  bool _isLoading = true; // API 호출 상태를 나타내는 변수
 
   @override
   void initState(){
     super.initState();
-    getNode(context);
-    getCount(context);
-    getData(context);
-    getSensor(context);
+    initializedData();
   }
 
   @override
@@ -31,21 +32,32 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     super.dispose();
   }
 
+  Future<void> initializedData() async{
+    await Future.wait([
+    getNode(context),
+    getCount(context),
+    getData(context),
+    getSensor(context),
+    ]);
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: Container(
-      //   child: ListView.builder(
-      //     itemCount: Provider.of<StateProvider>(context).tempData3.length,
-      //     itemBuilder: (context, index) {
-      //       var item = Provider.of<StateProvider>(context).tempData3[index];
-      //       return ListTile(
-      //         title: Text(item['setup_location'] ?? ''), // null 체크 후 공백으로 대체
-      //         subtitle: Text(item['id'] ?? ''), // null 체크 후 공백으로 대체
-      //       );
-      //     },
-      //   )
-    body: Container(
+      body: _isLoading ? Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 30,),
+            loadingtxt(),
+          ],
+        ),
+      )
+          : Container(
               color: Colors.white,
               padding: EdgeInsets.all(10),
               child: Column(
@@ -75,13 +87,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                ],
               ),
             ),
-
-
+          ],
+        ),
+      ),
     );
   }
 }

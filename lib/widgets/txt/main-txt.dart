@@ -45,9 +45,11 @@ Text nodeid(String txt){
 Text prio_status(String txt){
   return Text(
     txt,
+    textAlign: TextAlign.center,
     style: TextStyle(
       fontFamily: 'shsB',
       fontSize: 20,
+      color: Colors.white,
     ),
   );
 }
@@ -162,6 +164,13 @@ TextStyle textStyle(){
   );
 }
 
+TextStyle status_textStyle(){
+  return TextStyle(
+    fontFamily: 'shsB',
+    fontSize: 20,
+  );
+}
+
 Text data_txt(
     String txt,
     ){
@@ -179,6 +188,17 @@ Text data_txt2(
     ){
   return Text(
     txt,
+    textAlign: TextAlign.center,
+    style: TextStyle(
+      fontFamily: 'shsM',
+      fontSize: 20,
+    ),
+  );
+}
+
+Text loadingtxt(){
+  return Text(
+    'Data Loading ···',
     textAlign: TextAlign.center,
     style: TextStyle(
       fontFamily: 'shsM',

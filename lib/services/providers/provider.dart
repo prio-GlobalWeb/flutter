@@ -1,7 +1,11 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'package:prio_web/model/data.dart';
 import 'package:prio_web/services/providers/dataprovider.dart';
+import 'package:provider/provider.dart';
 
 class StateProvider extends ChangeNotifier{
   DateTime? _current = DateTime.now();
@@ -70,15 +74,13 @@ class StateProvider extends ChangeNotifier{
   void updatedPanel(int idx){
     if (_selectedPanel == idx) {
       _count++; // 패널을 누를 때마다 count 증가
-      print(count);
     } else {
       _count = 1; // 새로운 패널을 눌렀을 때는 count 초기화
-      print(count);
     }
+    // 1번째 패널 클릭 후 와몬스 클릭 후 다시 프리오 1번 클릭 시
+    // selectedPanel 값이 이전과 동일해서 패널 선택이 제대로 안되는 문제 발생
     _selectedPanel = idx;
     _panelClicks[idx] = !panelClicks[idx];
-    print(selectedPanel);
-    print(panelClicks);
     notifyListeners();
   }
 
@@ -98,8 +100,6 @@ class StateProvider extends ChangeNotifier{
     }
     _selectedPanel2 = idx;
     _panelClicks2[idx] = !panelClicks2[idx];
-    print(selectedPanel2);
-    print('{panelClicks2}');
     notifyListeners();
   }
 
@@ -128,4 +128,103 @@ class StateProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  Map<Color, String> colorText = {
+    Color(0xff4e92fd) : "Very Good",
+    Color(0xff4fec76) :"Good",
+    Color(0xffee8b60) : "Bad",
+    Color(0xffff5963) : "Very Bad",
+  };
+
+  // 제품 상태별 색상 반환 함수
+  statusColor(int sum){
+    if(sum >= 90){
+      return Color(0xff4e92fd);
+    }
+    else if(sum >= 80){
+      return Color(0xff4fec76);
+    }
+    else if(sum >= 70){
+      return Color(0xffee8b60);
+    }
+    else{
+      return Color(0xffff5963);
+    }
+  }
+
+  Map<String, Color> getNodeColorMap(Map<String, int> nodeSumMap, category, BuildContext context) {
+    Map<String, Color> nodeColorMap = {};
+    // 해당 카테고리에 속하는 데이터들만 필터링하여 처리
+    List filteredData = Provider.of<DataProvider>(context).panelData
+        .where((data) => data['category'] == category).toList();
+    filteredData.forEach((data) {
+      String node = data['id'];
+      int sum = nodeSumMap[node] ?? 0;
+      Color color = statusColor(sum);
+      nodeColorMap[node] = color;
+    });
+    return nodeColorMap;
+  }
+
+  Map<Color, double> getColorCounts(Map<String, Color> nodeColorMap) {
+    Map<Color, double> colorCounts = {};
+
+    // nodeColorMap에서 각 색상별로 개수를 세어 colorCounts 맵에 저장
+    nodeColorMap.values.forEach((color) {
+      colorCounts[color] = (colorCounts[color] ?? 0) + 1;
+    });
+    return colorCounts;
+  }
+
+  Map<String, double> _values = {};
+  Map<String, double> get values => _values;
+
+  Map<String, double> getColorTextCounts(Map<String, Color> nodeColorMap, Map<Color, String> colorText) {
+    // 원하는 순서대로 요소를 추가하기 위해 LinkedHashMap을 사용합니다.
+    Map<String, double> colorTextCounts = LinkedHashMap<String, double>();
+
+    // 순서대로 요소를 추가합니다.
+    colorText.forEach((color, text) {
+      double count = nodeColorMap.values.where((c) => c == color).length.toDouble();
+      colorTextCounts[text] = count;
+    });
+    _values = colorTextCounts;
+    return colorTextCounts;
+  }
+
+  Map<String, double> _values2 = {};
+  Map<String, double> get values2 => _values2;
+  Map<String, double> getColorTextCounts2(Map<String, Color> nodeColorMap, Map<Color, String> colorText) {
+    // 원하는 순서대로 요소를 추가하기 위해 LinkedHashMap을 사용합니다.
+    Map<String, double> colorTextCounts = LinkedHashMap<String, double>();
+
+    // 순서대로 요소를 추가합니다.
+    colorText.forEach((color, text) {
+      double count = nodeColorMap.values.where((c) => c == color).length.toDouble();
+      colorTextCounts[text] = count;
+    });
+    _values2 = colorTextCounts;
+    return colorTextCounts;
+  }
+
+  // 마지막 데이터의 수치에 따른 색상
+//   String convertToColor(List<Map<String, String>> sensorData, List<Map<String, dynamic>>fileData, BuildContext context) {
+//     switch () {
+//       case '온도':
+//         return 'Temperature (°C)';
+//       case '습도':
+//         return 'Humidity (%)';
+//       case 'TVOC':
+//         return 'TVOC (ppb)';
+//       case 'CO':
+//         return 'CO (ppm)';
+//       case 'CO2':
+//         return 'CO2 (ppm)';
+//       case 'PM10':
+//         return 'PM10 (㎍/m³)';
+//       case 'PM2.5':
+//         return 'PM2.5 (㎍/m³)';
+//       default:
+//         return name;
+//     }
+//   }
 }
