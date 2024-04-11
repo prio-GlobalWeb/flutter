@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:prio_web/map-units/map-bottom.dart';
 import 'package:prio_web/map-units/map-top.dart';
+import 'package:prio_web/services/api/map-api.dart';
+import 'package:prio_web/services/providers/mapprovider.dart';
+import 'package:provider/provider.dart';
 
 import 'main-units/main-top.dart';
 
@@ -14,9 +17,15 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      mapSensor(context);
+      mapPosition(context);
+      // Provider.of<MapProvider>(context, listen:false).setData();
+    });
   }
+
 
   @override
   void dispose() {
@@ -45,7 +54,7 @@ class _MapPageState extends State<MapPage> {
             Expanded(
               flex: 9,
               child: Container(
-                padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: Container(
                   color: Colors.white,
                   child:  Column(

@@ -1,9 +1,6 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
-import 'package:prio_web/model/data.dart';
 import 'package:prio_web/services/providers/dataprovider.dart';
 import 'package:provider/provider.dart';
 
@@ -32,16 +29,20 @@ class StateProvider extends ChangeNotifier{
 
   void selectValue2(String value){
     _selectedValue2 = value;
-    if(value == "Good"){
+    if(value == "Very Good"){
       _coloridx = 1;
+      _color = Color(0xff4e92fd);
+    }
+    if(value == "Good"){
+      _coloridx = 2;
       _color = Color(0xff4fec76);
     }
-    if(value == "Normal") {
-      _coloridx = 2;
+    if(value == "Bad") {
+      _coloridx = 3;
       _color = Color(0xffee8b60);
     }
-    if(value == "Bad"){
-      _coloridx = 3;
+    if(value == "Very Bad"){
+      _coloridx = 4;
       _color = Color(0xffff5963);
     }
     notifyListeners();
@@ -58,19 +59,24 @@ class StateProvider extends ChangeNotifier{
   int _count = 0;
   int get count => _count;
 
-  void resetPanel(idx){
+  void resetPanel(){
     _count = 0;
     notifyListeners();
   }
 
   void selectedPanel_f(){
-    _panelClicks[_selectedPanel] = false;
-    notifyListeners();
+    if (_selectedPanel != -1) {
+      _panelClicks[_selectedPanel] = false;
+      notifyListeners();
+    }
   }
   void unselectedPanel2(){
-    _panelClicks2[_selectedPanel2] = false;
-    notifyListeners();
+    if (_selectedPanel2 != -1) {
+      _panelClicks2[_selectedPanel2] = false;
+      notifyListeners();
+    }
   }
+
   void updatedPanel(int idx){
     if (_selectedPanel == idx) {
       _count++; // 패널을 누를 때마다 count 증가
@@ -85,12 +91,16 @@ class StateProvider extends ChangeNotifier{
   }
 
   void selectedPanel2_f(){
-    _panelClicks2[_selectedPanel2] = false;
-    notifyListeners();
+    if (_selectedPanel2 != -1) {
+      _panelClicks2[_selectedPanel2] = false;
+      notifyListeners();
+    }
   }
   void unselectedPanel(){
-    _panelClicks[_selectedPanel] = false;
-    notifyListeners();
+    if (_selectedPanel != -1) {
+      _panelClicks[_selectedPanel] = false;
+      notifyListeners();
+    }
   }
   void updatedPanel2(int idx){
     if (_selectedPanel2 == idx) {
@@ -153,7 +163,6 @@ class StateProvider extends ChangeNotifier{
 
   Map<String, Color> getNodeColorMap(Map<String, int> nodeSumMap, category, BuildContext context) {
     Map<String, Color> nodeColorMap = {};
-    // 해당 카테고리에 속하는 데이터들만 필터링하여 처리
     List filteredData = Provider.of<DataProvider>(context).panelData
         .where((data) => data['category'] == category).toList();
     filteredData.forEach((data) {
@@ -165,24 +174,12 @@ class StateProvider extends ChangeNotifier{
     return nodeColorMap;
   }
 
-  Map<Color, double> getColorCounts(Map<String, Color> nodeColorMap) {
-    Map<Color, double> colorCounts = {};
-
-    // nodeColorMap에서 각 색상별로 개수를 세어 colorCounts 맵에 저장
-    nodeColorMap.values.forEach((color) {
-      colorCounts[color] = (colorCounts[color] ?? 0) + 1;
-    });
-    return colorCounts;
-  }
-
   Map<String, double> _values = {};
   Map<String, double> get values => _values;
 
   Map<String, double> getColorTextCounts(Map<String, Color> nodeColorMap, Map<Color, String> colorText) {
     // 원하는 순서대로 요소를 추가하기 위해 LinkedHashMap을 사용합니다.
     Map<String, double> colorTextCounts = LinkedHashMap<String, double>();
-
-    // 순서대로 요소를 추가합니다.
     colorText.forEach((color, text) {
       double count = nodeColorMap.values.where((c) => c == color).length.toDouble();
       colorTextCounts[text] = count;

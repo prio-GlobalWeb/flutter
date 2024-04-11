@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:prio_web/home.dart';
 import 'package:prio_web/widgets/txt/main-txt.dart';
+import 'package:provider/provider.dart';
+
+import '../services/providers/dataprovider.dart';
+import '../services/providers/mapprovider.dart';
+import '../services/providers/provider.dart';
 
 class MainTop extends StatefulWidget {
   const MainTop({super.key});
@@ -15,7 +21,25 @@ class _MainTopState extends State<MainTop> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset('assets/images/prio.png', fit: BoxFit.contain,),
+        GestureDetector(
+          onTap: () {
+            // Provider를 사용하여 MapProvider에 접근
+            final mapprovider = Provider.of<MapProvider>(context, listen: false);
+            // 상태 초기화 메소드 호출
+            mapprovider.resetSelection();
+
+            // Home 페이지로 이동
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+                  return Home(); // 이동할 페이지 위젯
+                },
+                transitionDuration: Duration(milliseconds: 0), // 전환 시간 설정 (0으로 설정하여 효과를 없앰)
+              ),
+            );
+          },
+          child: Image.asset('assets/images/prio.png', fit: BoxFit.contain,),
+        ),
         Container(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,

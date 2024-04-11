@@ -3,6 +3,8 @@ import "package:flutter/material.dart";
 import 'package:prio_web/services/providers/provider.dart';
 import 'package:prio_web/widgets/txt/main-txt.dart';
 import "package:provider/provider.dart";
+import "../services/providers/dataprovider.dart";
+import "../services/providers/mapprovider.dart";
 
 Widget locationDrop(
     BuildContext context,
@@ -57,7 +59,7 @@ Widget statusDrop(
     ){
   return Consumer<StateProvider>(
     builder: (context, stateProvider, _){
-      final List<String> status = ['Good', 'Normal','Bad'];
+      final List<String> status = ['Very Good', 'Good', 'Bad','Very Bad'];
       return DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
           isExpanded: true,
@@ -93,6 +95,59 @@ Widget statusDrop(
           ),
           menuItemStyleData: const MenuItemStyleData(
             height: 50,
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget nodeDrop(BuildContext context) {
+  return Consumer<StateProvider>(
+    builder: (context, stateProvider, _) {
+      final List nodes = Provider.of<DataProvider>(context, listen: false).nodes;
+      return DropdownButtonHideUnderline(
+        child: DropdownButton2<String>(
+          isExpanded: true,
+          hint: Text(
+            'ID (All)',
+            style: TextStyle(
+              fontFamily: 'shsR',
+              fontSize: 18,
+            ),
+          ),
+          items: nodes.map<DropdownMenuItem<String>>((dynamic item) {
+            return DropdownMenuItem<String>(
+              value: item,
+              child: Text(
+                item,
+                style: TextStyle(
+                  fontFamily: 'shsR',
+                  fontSize: 18,
+                ),
+              ),
+            );
+          }).toList(),
+          value: Provider.of<MapProvider>(context, listen: false).selectedNode,
+          onChanged: (String? value) {
+            Provider.of<MapProvider>(context, listen: false).saveNodeId(value!);
+          },
+          buttonStyleData: ButtonStyleData(
+            padding: EdgeInsets.only(right: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(0),
+              border: Border.all(
+                color: Color(0xffaab1b7),
+                width: 1,
+              ),
+              color: Colors.white,
+            ),
+          ),
+          menuItemStyleData: const MenuItemStyleData(
+            height: 50,
+          ),
+          dropdownStyleData: const DropdownStyleData(
+            maxHeight: 300,
           ),
         ),
       );

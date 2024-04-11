@@ -8,12 +8,26 @@ class DataProvider extends ChangeNotifier {
   List get panelData => _panelData;
   List _nodes = [];
   List get nodes => _nodes;
+  List<dynamic> _transformedData = [];
+  List<dynamic> get transformedData => _transformedData;
+
+  void test(){
+    _transformedData = [{'id': 'PRO001', 'setup_location': 'd'}, {'id': 'PRO002', 'setup_location': '비서실'}, {'id': 'PRO003', 'setup_location': '총무실옆방테이블위'}, {'id': 'PRO004', 'setup_location': '자재팀'}, {'id': 'PRO005', 'setup_location': '경비실'}, {'id': 'WAM001', 'setup_location': '1-배전반'}, {'id': 'WAM002',' setup_location': '2-배전반'}, {"id":" WAM003", 'setup_location': '3-배전반'}, {'id': 'WAM004', 'setup_location': '4-배전반'}, {'id': 'WAM005', 'setup_location': '5-배전반'}];
+    notifyListeners();
+  }
 
   void tempData(data) {
     _panelData = data;
     // 조회된 데이터에서 노드 값만 별도의 리스트로 저장
     // 초기 화면의 상태 색상을 구하기 위함
     _nodes = data.map((item) => item['id']).toList();
+    // _transformedData = data.map((entry) {
+    //   return {
+    //     'id': entry['id'],
+    //     'setup_location': entry['setup_location']
+    //   };
+    // }).toList();
+    // print(transformedData);
     notifyListeners();
   }
 
@@ -76,7 +90,7 @@ class DataProvider extends ChangeNotifier {
 
   List<String> returnName(id) {
     _sensorData = sensorNames[id] ?? [];
-    print(_sensorData); // 이름, 슬롯넘버
+    // print(_sensorData); // 이름, 슬롯넘버
     List<String> names = [];
     for (var data in _sensorData) {
       if (data.containsKey('name')) {
@@ -118,11 +132,11 @@ class DataProvider extends ChangeNotifier {
       case 'PM2.5':
         return 'PM2.5 (㎍/m³)';
       case '전류':
-        return 'electric current (A)';
+        return 'Electric Current (A)';
       case '진동':
-        return 'vibration (g)';
+        return 'Vibration (g)';
       case '기울기':
-        return 'inclination (˚)';
+        return 'Inclination (˚)';
       default:
         return name;
     }
@@ -216,9 +230,7 @@ class DataProvider extends ChangeNotifier {
     _fileData = [];
     _nodeData = _tempNodeData.firstWhere((item) => item['node'] == node,
         orElse: () => null);
-    setDataMap(context, _node!);
-    // print(_nodeData);
-    // tempScore(context);
+    setDataMap(context, node);
     // 노드의 데이터가 존재한다면
     if (_nodeData != null) {
       // 마지막 datas의 files 부분만 추출
@@ -233,7 +245,7 @@ class DataProvider extends ChangeNotifier {
             if(sensor['slot_number'].toString()==_returnData[i]['file_name'].toString()) {
               _fileData.add({
                 'file_name': _returnData[i]['file_name'],
-                'file_data': _returnData[i]['file_data']
+                'file_data': _returnData[i]['file_data'],
               });
             }
           }
@@ -244,7 +256,6 @@ class DataProvider extends ChangeNotifier {
         _fileData.add({'file_name': 0});
       }
     }
-    print(fileData);
   }
 
   Map<String, int> _scores = {};

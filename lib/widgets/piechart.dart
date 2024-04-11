@@ -4,12 +4,14 @@ import 'package:prio_web/services/providers/dataprovider.dart';
 import 'package:prio_web/services/providers/provider.dart';
 import 'package:provider/provider.dart';
 
-List<Color> colorList = [Color(0xff4e92fd), Color(0xff3cbc5b), Color(0xffee8b60), Color(0xffff5963)];
-
 PieChart prioPie(BuildContext context){
   final stateProvider = Provider.of<StateProvider>(context);
   final dataProvider = Provider.of<DataProvider>(context);
-  Map<String, double> result = stateProvider.getColorTextCounts(stateProvider.getNodeColorMap(dataProvider.nodeSums, "PRIO", context), stateProvider.colorText);
+  List<Color> colorList = stateProvider.colorText.keys.toList();
+  Map<String, double> result = stateProvider.getColorTextCounts(
+      stateProvider.getNodeColorMap(dataProvider.nodeSums, "PRIO", context),
+      stateProvider.colorText
+  );
   return PieChart(
     dataMap: result,
     colorList: colorList,
@@ -49,7 +51,7 @@ ListView prioCount(context){
       final value = values[idx];
       return Row(
         children: [
-          Icon(Icons.circle, color: colorList[idx],),
+          Icon(Icons.circle, color: stateProvider.colorText.keys.toList()[idx],),
           SizedBox(width: 5,),
           value!=null?Text('${value}'):Text('0'),
         ],
@@ -62,6 +64,7 @@ ListView prioCount(context){
 PieChart wamonsPie(BuildContext context){
   final stateProvider = Provider.of<StateProvider>(context);
   final dataProvider = Provider.of<DataProvider>(context);
+  List<Color> colorList = stateProvider.colorText.keys.toList();
   Map<String, double> result = stateProvider.getColorTextCounts2(stateProvider.getNodeColorMap(dataProvider.nodeSums, "WAMONS", context), stateProvider.colorText);
   return PieChart(
     dataMap: result,
@@ -102,7 +105,7 @@ ListView wamonsCount(BuildContext context){
       final value = values[idx];
       return Row(
         children: [
-          Icon(Icons.circle,color: colorList[idx]),
+          Icon(Icons.circle,color: stateProvider.colorText.keys.toList()[idx]),
           SizedBox(width: 5,),
           value!=null?Text('${value}'):Text('0'),
         ],

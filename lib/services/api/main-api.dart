@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:prio_web/services/providers/dataprovider.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'config.dart';
+import '../config.dart';
 
 Map<String, String> headers = {
   'Content-Type': 'application/json',
@@ -73,29 +73,6 @@ Future<void> getCount(BuildContext context) async {
   }
 }
 
-//  각 장치에 대한 데이터 가져오기
-// Future<void> getData(BuildContext context) async {
-//   try {
-//     const String uri = '${Config.API_URL}/call2';
-//     final response = await http.get(
-//       Uri.parse(uri),
-//       headers: headers,
-//     );
-//     if (response.statusCode == 200) {
-//       String responseData = utf8.decode(response.bodyBytes); // UTF-8로 명시적으로 디코딩
-//       // List<String> dataList = responseData.split(',');
-//       print(responseData);
-//       // 데이터 처리
-//       // 상태 관리 프로바이더에 데이터 전달
-//       Provider.of<DataProvider>(context, listen: false).tempDatas(responseData);
-//       // print(tempDataList);
-//     } else {
-//       print("불러오기 실패");
-//     }
-//   } catch (e) {
-//     print("에러: $e");
-//   }
-// }
 
 Future<void> getData(BuildContext context) async {
   try {

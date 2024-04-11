@@ -29,7 +29,7 @@ Widget prioGrid(){
                 stateProvider.unselectedPanel2();
               }
               if (stateProvider.count == 2) {
-                stateProvider.resetPanel(idx);// count가 2일 때는 count 초기화
+                stateProvider.resetPanel();// count가 2일 때는 count 초기화
                 stateProvider.click(3);
                 stateProvider.selectedPanel_f();
                 dataProvider.resetData();
@@ -98,7 +98,7 @@ Widget wamonsGrid(){
                 stateProvider.unselectedPanel();
               }
               if (stateProvider.count == 2) {
-                stateProvider.resetPanel(idx); // count가 2일 때는 count 초기화
+                stateProvider.resetPanel(); // count가 2일 때는 count 초기화
                 stateProvider.click(3);
                 stateProvider.selectedPanel2_f();
                 dataProvider.resetData();

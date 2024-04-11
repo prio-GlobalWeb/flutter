@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'home.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,7 +78,8 @@ class MyApp extends StatelessWidget {
             child: widget!,
           );
         },
-        home: MapPage(),
+        home: Home(),
+        navigatorKey: navigatorKey,
         // home: Home(),
       ),
     );

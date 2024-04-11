@@ -5,7 +5,7 @@ import 'package:prio_web/main-units/main-left.dart';
 import 'package:prio_web/main-units/main-right.dart';
 import 'package:prio_web/main-units/main-top.dart';
 import 'package:prio_web/model/data.dart';
-import 'package:prio_web/services/api.dart';
+import 'package:prio_web/services/api/main-api.dart';
 import 'package:prio_web/services/providers/dataprovider.dart';
 import 'package:prio_web/services/providers/provider.dart';
 import 'package:prio_web/widgets/txt/main-txt.dart';
